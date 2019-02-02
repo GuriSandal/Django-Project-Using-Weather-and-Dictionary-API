@@ -1,0 +1,54 @@
+{% extends 'Weather/index.html' %}
+
+{% block bar %}
+<li class="navbar-brand text-light"><h3><strong>Word Dictionary</strong></h3></li>
+{% endblock %}
+
+{% block body %}
+  <div class="container text-dark mt-5 mb-5">
+    <div class="row">
+      <div class="col-ml-12">
+        <h2 id="content">Dictionary</h2>
+        <form method="get">
+          {{ form.as_p }}
+          <button type="submit">search</button>
+        </form>
+
+        {% if search_result %}
+          <hr>
+          {% if search_result.success %}
+            {% for result in search_result.results %}
+              <h1>{{ result.word }}</h1>
+              {% for lexicalentry in result.lexicalEntries %}
+                <br><strong>{{ lexicalentry.lexicalCategory }}</strong>
+                <ul type=none>
+                  {% for entry in lexicalentry.entries %}
+                    {% for sense in entry.senses %}
+                      {% for definition in sense.definitions %}
+                      <li><i>{{ definition }}</i></li>
+                      {% endfor %}
+                      <li><strong>Examples :-</strong></li>
+                      {% for eg in sense.examples %}
+                      <li>{{ eg.text }}</li>
+                      {% endfor %}
+                      <br>
+                    {% endfor %}
+                  {% endfor %}
+                </ul>
+              {% endfor %}
+            {% endfor %}
+          {% else %}
+            <p><em>{{ search_result.message }}</em></p>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block change %}
+<div class='col-md-6 text-light'>
+
+
+<a class="btn btn-warning btn-block " id="word_dictionary_id"   href="{% url 'Weather:main' %}" style='margin-top:25%;'><strong>Go to city weather>> </strong></a>
+</div>
+{% endblock %}

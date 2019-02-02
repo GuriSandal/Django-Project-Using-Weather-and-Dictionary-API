@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1">
+
+		<title>Search City</title>
+
+		<!-- Loading third party fonts -->
+		<link rel="stylesheet" href="{% static "BS/css/bootstrap.min.css" %}">
+		<link href="http://fonts.googleapis.com/css?family=Roboto:300,400,700|" rel="stylesheet" type="text/css">
+		<link href="{% static "Weather/fonts/font-awesome.min.css" %}" rel="stylesheet" type="text/css">
+		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		<!-- Loading main css file -->
+		<link rel="stylesheet" href="{% static "Weather/style.css" %}">
+
+		<!--[if lt IE 9]>
+		<script src="js/ie-support/html5.js"></script>
+		<script src="js/ie-support/respond.js"></script>
+		<![endif]-->
+		<style media="screen">
+			.abc:visited{
+				text-decoration:underline;
+				color:red;
+			}
+
+		</style>
+
+	</head>
+
+	<body class="">
+		<nav class="navbar bg-dark navbar-expand">
+      <ul class="navbar-nav">
+				{% block bar %}
+        <li class="navbar-brand text-light"><h3><strong>City Weather and Map</strong></h3></li>
+				{% endblock %}
+				<li class="nav-item text-light mr-auto"><a class="nav-link" href="{% url "Weather:feedback" %}"><h3><strong>Feedback</strong></h3></a></li>
+      </ul>
+    </nav>
+		{% block body %}
+		<div class="site-content">
+			<header class="hero" data-bg-image="{% static "Weather/images/w3.jpg" %}">
+				<div class="container">
+					<div class="hero-content text-light">
+						<h1 id="content">Easy way to search your City Weather<br><strong>Simple and powerful</strong></h1>
+					</div>
+					<h6 class=""><strong>City Name must Write as Title (eg: Las Vegas)</strong></h6>
+					<form class="subscribe-form" method="POST">
+						{% csrf_token %}
+						{{ form.name }}
+						<input type="submit"  value="Add City">
+					</form>
+
+					<span class="scrolldown">Scroll down to explore <br><i class="fa fa-chevron-down"></i></span>
+				</div>
+			</header> <!-- hero -->
+
+				<div class="fullwidth-block">
+					<div class="container">
+						<h2 class="section-title"></h2>
+						<small class="section-subtitle"></small>
+
+						<div class="row">
+							{% for weather in weather_data %}
+							<div class="col-sm-4">
+								<div class="pricing featured">
+									<div class="pricing-header">
+										<article class="media">
+                        <div class="media-left">
+                            <figure class="image is-50x50">
+                                <img src="http://openweathermap.org/img/w/10d.png" alt="Image">
+                            </figure>
+                        </div>
+										<div class="price text-dark">
+											<span class="title"><strong>{{ weather.city|title }}</strong></span>
+											<br>
+											<span class="subtitle"><strong>{{ weather.temperature }}° C</strong></span>
+											<br> {{ weather.description|title }}
+										</div>
+									</div>
+									<div class="pricing-checklist text-dark">
+										<ul>
+											<li class="check">Pressure : {{ weather.pressure }} hpa </li>
+											<li class="check">Humidity : {{ weather.humidity }} %</li>
+											<li class="check">Clouds : {{ weather.clouds }} %</li>
+											<li class="check">Wind : {{ weather.wind }} m/s </li>
+											<li class="check">Latitude : {{ weather.latitude }}</li>
+											<li class="check">Longitude : {{ weather.longitude }}</li>
+											<li class="check">Country : {{ weather.country }}</li>
+											<form class="" action="" method="post">
+												{% csrf_token %}
+												<li class="check"><a href="https://open.mapquestapi.com/staticmap/v5/map?key=SmG71tZTSw5l2rXpFspwnYQq7Vy0jJPO&center={{ weather.latitude }},{{ weather.longitude }}&size=@2x" class='btn btn-info'>Map</a></li>
+												<li class="check"><a href="{% url "Weather:delete_city" id=weather.id %}" class='btn btn-danger'>Delete</a></li>
+											</form>
+										</ul>
+									</div>
+								</div>
+							</div>
+							{% endfor %}
+						</div> <!-- .row -->
+					</div> <!-- .container -->
+				</div> <!-- .fullwidth-block -->
+			</main> <!-- .main-content -->
+				{% endblock %}
+				<div class="container-fluid">
+					<div class="row mb-5" style='background-image:url("{% static "Weather/images/banner.jpg" %}"); height:400px; background-attachment:fixed; '>
+						<div class="col-md-3">
+
+						</div>
+							{% block change %}
+							<div class='col-md-6 text-light'>
+
+
+							<a class="btn btn-warning btn-block " id="word_dictionary_id"   href="{% url 'WordDict:dict' %}" style='margin-top:25%;'><strong>Go to Dictionary >> </strong></a>
+						</div>
+							{% endblock %}
+						<div class="col-md-3">
+
+						</div>
+					</div>
+				</div>
+
+
+			<footer class="site-footer bg-dark">
+				<div class="container">
+					<p>Designed by Gurjant and Gagan. All rights reserved</p>
+
+					<div class="social-links">
+						<a href="https://www.facebook.com/gurjant.sandal1" class="facebook"><i class="fa fa-facebook"></i></a>
+						<a href="https://twitter.com/GurjantSandal" class="twitter"><i class="fa fa-twitter"></i></a>
+						<a href="https://plus.google.com/u/1/101262537003353085503" class="google-plus"><i class="fa fa-google-plus"></i></a>
+						<a href="https://www.instagram.com/gurjantsandal/" class="pinterest"><i class="fa fa-instagram"></i></a>
+					</div>
+
+				</div>
+
+
+			</footer>
+
+
+		<script src="{% static "Weather/js/jquery-1.11.1.min.js" %}"></script>
+		<script src="{% static "Weather/js/plugins.js" %}"></script>
+		<script src="{% static "Weather/js/app.js" %}"></script>
+
+	</body>
+</html>
