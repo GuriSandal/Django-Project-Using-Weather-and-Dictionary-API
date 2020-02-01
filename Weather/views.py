@@ -8,7 +8,7 @@ from django.contrib import messages
 from Weather import forms
 
 def index(request):
-    url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid=21e696f4e0e757c95340595f106183b3'
+    url = 'https://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid=21e696f4e0e757c95340595f106183b3'
     urlMap = 'https://open.mapquestapi.com/staticmap/v5/map?key=SmG71tZTSw5l2rXpFspwnYQq7Vy0jJPO&center={},{}&size=@2x'
     cities = City.objects.order_by('name')
     form = CityForm(request.POST or None)
@@ -33,7 +33,7 @@ def index(request):
         try:
             Weather = {
                 'id' : city.id,
-                'city' : city,
+                'city' : city.name,
                 'temperature' : city_weather['main']['temp'],
                 'pressure' : city_weather['main']['pressure'],
                 'humidity' : city_weather['main']['humidity'],
@@ -41,7 +41,6 @@ def index(request):
                 'description' : city_weather['weather'][0]['description'],
                 'icon' : city_weather['weather'][0]['icon'],
                 'wind' : city_weather['wind']['speed'],
-                'message' : city_weather['sys']['message'],
                 'latitude' : city_weather['coord']['lat'],
                 'longitude' : city_weather['coord']['lon'],
                 'country' : city_weather['sys']['country'],
